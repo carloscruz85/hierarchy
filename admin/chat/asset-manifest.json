@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "./wp-content/plugins/cc85-chatbox/chat/static/css/main.629bd338.chunk.css",
+    "main.js": "./wp-content/plugins/cc85-chatbox/chat/static/js/main.8e8ca42e.chunk.js",
+    "main.js.map": "./wp-content/plugins/cc85-chatbox/chat/static/js/main.8e8ca42e.chunk.js.map",
+    "runtime-main.js": "./wp-content/plugins/cc85-chatbox/chat/static/js/runtime-main.f2fb2dad.js",
+    "runtime-main.js.map": "./wp-content/plugins/cc85-chatbox/chat/static/js/runtime-main.f2fb2dad.js.map",
+    "static/js/2.8e618abd.chunk.js": "./wp-content/plugins/cc85-chatbox/chat/static/js/2.8e618abd.chunk.js",
+    "static/js/2.8e618abd.chunk.js.map": "./wp-content/plugins/cc85-chatbox/chat/static/js/2.8e618abd.chunk.js.map",
+    "index.html": "./wp-content/plugins/cc85-chatbox/chat/index.html",
+    "precache-manifest.8e80a0d562f23d87ba7e9ce8d3e27881.js": "./wp-content/plugins/cc85-chatbox/chat/precache-manifest.8e80a0d562f23d87ba7e9ce8d3e27881.js",
+    "service-worker.js": "./wp-content/plugins/cc85-chatbox/chat/service-worker.js",
+    "static/css/main.629bd338.chunk.css.map": "./wp-content/plugins/cc85-chatbox/chat/static/css/main.629bd338.chunk.css.map",
+    "static/js/2.8e618abd.chunk.js.LICENSE.txt": "./wp-content/plugins/cc85-chatbox/chat/static/js/2.8e618abd.chunk.js.LICENSE.txt",
+    "static/media/bot.png": "./wp-content/plugins/cc85-chatbox/chat/static/media/bot.0a2b77e3.png",
+    "static/media/chat.png": "./wp-content/plugins/cc85-chatbox/chat/static/media/chat.ec626edc.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.f2fb2dad.js",
+    "static/js/2.8e618abd.chunk.js",
+    "static/css/main.629bd338.chunk.css",
+    "static/js/main.8e8ca42e.chunk.js"
+  ]
+}
