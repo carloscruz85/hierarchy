@@ -39,6 +39,18 @@ function create_position_tax() {
       'show_admin_column' =>true
     )
   );
+
+  register_taxonomy(
+    'position_type_tax',
+    array('positions'),
+    array(
+      'show_in_nav_menus' => true,
+      'label' => __( 'Position Type' ),
+      // 'rewrite' => array('slug'=>'discover'),
+      'hierarchical' => true,
+      'show_admin_column' =>true
+    )
+  );
 }
 
 function metabox_to_test_reg() {
