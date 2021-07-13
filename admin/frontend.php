@@ -17,9 +17,9 @@ wp_register_style( 'new_style', plugins_url('/css/style.css', __FILE__), false, 
   }
 
 // shortcode
-add_shortcode( 'cc85_search_box', 'cc85_search_box' );
+add_shortcode( 'cc85_search_box', 'cc85_search_box_function' );
 
-function cc85_search_box(){
+function cc85_search_box_function(){
 
   //get all positions
   $args = array(
@@ -69,8 +69,8 @@ function cc85_search_box(){
 
 
   //add js in the footer
-  add_action( 'wp_footer', 'js_code_to_positions' );
-  function js_code_to_positions(){
+  add_action( 'wp_footer', 'cc85_js_code_to_positions' );
+  function cc85_js_code_to_positions(){
     global $json;
     ?>
 
