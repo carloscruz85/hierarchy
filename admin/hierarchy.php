@@ -1,83 +1,63 @@
 <?php
 //header
-//add gojs script to heaeder
-add_action( 'init', 'add_gojs_to_header' );
-function add_gojs_to_header() {
-
- wp_register_script( 'cc85-gojs', 'https://unpkg.com/gojs/release/go-debug.js', array(), '1.0', 'all');
+//add treeflex to header
+add_action( 'init', 'add_tree_flex_to_header' );
+function add_tree_flex_to_header() {
+ wp_register_style( 'cc85-treeflex', 'https://unpkg.com/treeflex/dist/css/treeflex.css', array(), '1.0', 'all');
 }
-  add_action('wp_enqueue_scripts', 'enqueue_gojs_script');
+  // use the registered jquery and style above
+  add_action('wp_enqueue_scripts', 'enqueue_style_treeflex');
 
-  function enqueue_gojs_script(){
-  wp_enqueue_script( 'cc85-gojs' );
+  function enqueue_style_treeflex(){
+  wp_enqueue_style( 'cc85-treeflex' );
+
   }
 
-  //add shortcode
+  // shortcode
+  add_shortcode( 'cc85_hierarchy', 'cc85_hierarchy_function' );
 
-  add_shortcode( 'cc85_hierarchy', 'cc85_hierarchy_code' );
-
-  function cc85_hierarchy_code(){
+  function cc85_hierarchy_function($att){
+    // x($att);
     if ( is_admin()){
-    	return;
+      return;
     }
-    ?>
-    <div id="myDiagramDiv" style="width:100%; height:100vh; background-color: #DAE4E4;">
+    if( $att['full'] == 'true' ){ //full
 
-    </div>
-    <?php
+    }
+    else{ //just cats
 
-    //add js in the footer
-    add_action( 'wp_footer', 'cc85_js_code_to_hierarchy' );
-    function cc85_js_code_to_hierarchy(){
+
       ?>
+      <div class="tf-tree tf-gap-lg">
 
-      <script>
-      $( document ).ready(function() {
-        //////safe////
-        var $ = go.GraphObject.make;
+            <?php tree() ?>
 
-        var myDiagram =
-          $(go.Diagram, "myDiagramDiv",
-            {
-              "undoManager.isEnabled": true,
-              layout: $(go.TreeLayout,
-                        { angle: 90, layerSpacing: 35 })
-            });
-
-        myDiagram.nodeTemplate =
-          $(go.Node, "Horizontal",
-            { background: "#dedede" },
-            $(go.TextBlock, "Default Text",
-              { margin: 10, stroke: "white", font: "10px sans-serif" },
-              new go.Binding("text", "name"))
-          );
-
-        // define a Link template that routes orthogonally, with no arrowhead
-        myDiagram.linkTemplate =
-          $(go.Link,
-            { routing: go.Link.Orthogonal, corner: 5 },
-            $(go.Shape, // the link's path shape
-              { strokeWidth: 3, stroke: "#555" })
-          );
-
-        // it's best to declare all templates before assigning the model
-        myDiagram.model = new go.TreeModel(
-          [
-            { key: "1",              name: "Don Meow"  },
-            { key: "2", parent: "1", name: "Demeter"   },
-            { key: "3", parent: "1", name: "Copricat"  },
-            { key: "4", parent: "3", name: "Jellylorum" },
-            { key: "5", parent: "3", name: "Alonzo"    },
-            { key: "6", parent: "2", name: "Munkustrap" }
-          ]);
-//////safe////
-
-    });
-
-
-      </script>
+</div>
 
       <?php
     }
   }
+
+function tree() {
+$taxName = "position_tax";
+$terms = get_terms($taxName, array('parent' => 0, 'fields' => 'ids'));
+subtree($terms, 0, $taxName);
+}
+function subtree($children_ids, $parrent_id, $taxName) {
+
+    if ( !empty($children_ids) ){
+        echo '<ul>';
+            foreach($children_ids as $term_child_id) {
+                $term_child = get_term_by('id', $term_child_id, $taxName);
+                if ( $term_child->parent == $parrent_id) {
+                    echo '<li><span class="tf-nc">' . $term_child->name . '</span>';
+                    $term_children = get_term_children($term_child_id, $taxName);
+                    subtree($term_children, $term_child_id, $taxName);
+                    echo '</li>';
+                }
+            }
+        echo '</ul>';
+    }
+}
+
  ?>
