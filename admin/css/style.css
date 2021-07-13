@@ -1,0 +1,17 @@
+.cc85-positions-container{
+  /* border: 1px solid red; */
+  width: 100%;
+  padding: 0.25rem;
+}
+
+.cc85-positions-container input{
+  width: 100%;
+  padding: 0.5rem 1rem;
+}
+
+.cc85-positions-container #resultados .cc85-position-card{
+  margin: 2rem 0;
+  /* border: 1px solid blue; */
+  padding: 0.5rem;
+  box-shadow: 10px 10px 20px black;
+}
