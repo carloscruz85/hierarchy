@@ -81,6 +81,10 @@ wp_nonce_field( 'mi_meta_box_nonce', 'meta_box_nonce' );
         <td> <input type="text" name="<?php echo $value ?>" value="<?php echo get_post_meta($post->ID,$value, true); ?>"></td>
       </tr>
     <?php endforeach; ?>
+    <tr>
+      <td><b>boss?</b></td>
+      <td><input type="checkbox" name="boss" value="true" <?php if(get_post_meta($post->ID,'boss', true) == 'true') echo 'checked' ?>></td>
+    </tr>
   </table>
 
 
@@ -110,6 +114,14 @@ function twp_save_meta_box( $post_id ) {
     if( isset( $_POST[$value] ) )
   	update_post_meta( $post_id, $value, $_POST[$value] );
   }
+
+  //boss
+  if( isset( $_POST['boss'] ) ){
+    update_post_meta( $post_id, 'boss', $_POST['boss'] );
+  }
+  else
+    update_post_meta( $post_id, 'boss', 'false' );
+
 
 
 }

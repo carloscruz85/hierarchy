@@ -5,14 +5,14 @@ add_action( 'init', 'add_icons_to_header' );
 function add_icons_to_header() {
 
 
-wp_register_style( 'new_style', plugins_url('/css/style.css', __FILE__), false, '1.0.0', 'all');
+// wp_register_style( 'new_style', plugins_url('/css/style.css', __FILE__), false, '1.0.0', 'all');
  wp_register_style( 'cc85-awesome-icons', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', array(), '1.0', 'all');
 }
   // use the registered jquery and style above
   add_action('wp_enqueue_scripts', 'enqueue_style');
 
   function enqueue_style(){
-  wp_enqueue_style( 'new_style' );
+  // wp_enqueue_style( 'new_style' );
   wp_enqueue_style( 'cc85-awesome-icons' );
   }
 

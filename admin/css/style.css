@@ -15,3 +15,26 @@
   padding: 0.5rem;
   box-shadow: 10px 10px 20px black;
 }
+
+/*Hierarchy*/
+
+.tf-tree{
+  margin: 2rem 0;
+}
+
+.tf-nc{
+  border: none !important;
+  box-shadow: 10px 10px 10px #000;
+ text-shadow: 2px 2px #000;
+}
+
+.tf-tree .members{
+  background-color: white !important;
+  color: #454545;
+  width: 300px;
+
+}
+
+.members .member{
+  margin: 1rem 0;
+}
