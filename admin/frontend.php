@@ -20,7 +20,9 @@ wp_register_style( 'new_style', plugins_url('/css/style.css', __FILE__), false, 
 add_shortcode( 'cc85_search_box', 'cc85_search_box_function' );
 
 function cc85_search_box_function(){
-
+  if ( is_admin()){
+    return;
+  }
   //get all positions
   $args = array(
     'post_type' => 'positions',

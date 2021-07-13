@@ -12,3 +12,4 @@ Text Domain: cc85
 
 include('admin/data.php');
 include('admin/frontend.php');
+include('admin/hierarchy.php');
