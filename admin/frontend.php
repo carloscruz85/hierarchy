@@ -60,7 +60,7 @@ function cc85_search_box_function(){
   //add input to search
   ?>
   <div class="cc85-positions-container">
-    <input type="text" name="" value="" id="cc85-positions-input">
+    <input type="text" name="" value="" id="cc85-positions-input" class="cc85searchinput">
     <div class="" id="resultados">
 
     </div>
@@ -76,16 +76,17 @@ function cc85_search_box_function(){
 
     <script>
 
-    const data = <?php echo $json ?>
 
-    const input = document.querySelector('input');
+    const data = <?php echo $json ?>;
+    const input = document.querySelector('input.cc85searchinput');
     const log = document.getElementById('resultados');
+
+
 
     input.addEventListener('input', updateValue);
 
     function updateValue(e) {
       log.innerHTML = '';
-
       data.filter( contact => {
         if( contact.name.toLowerCase().search(input.value.toLowerCase()) !== -1 ){
           return contact
@@ -101,6 +102,7 @@ function cc85_search_box_function(){
         log.append(p)
       })
     }
+
     </script>
 
     <?php
