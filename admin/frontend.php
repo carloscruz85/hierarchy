@@ -76,9 +76,12 @@ function cc85_search_box_function(){
 
     <script>
 
+
     const data = <?php echo $json ?>;
     const input = document.querySelector('input.cc85searchinput');
     const log = document.getElementById('resultados');
+
+
 
     input.addEventListener('input', updateValue);
 
@@ -99,6 +102,7 @@ function cc85_search_box_function(){
         log.append(p)
       })
     }
+
     </script>
 
     <?php
