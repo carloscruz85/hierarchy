@@ -34,24 +34,12 @@ function add_tree_flex_to_header() {
         <i class="fa fa-crosshairs"></i>
       </div>
     </div>
-          <?php
-
-    if( $att['full'] == 'true' ){ //full
-      ?>
-      <div class="tf-tree tf-gap-lg" id="main-hierarchy">
-        <?php treeFull() ?>
-      </div>
-      <?php
-    }
-    else{ //just cats
-      ?>
-      <div class="tf-tree tf-gap-lg" id="main-hierarchy">
-        <?php tree() ?>
-      </div>
-
-      <?php
-    }
-
+    <div class="tf-tree tf-gap-lg" id="main-hierarchy">
+    <?php
+    if( $att['full'] == 'true' )  treeFull(); //full
+    else tree(); //just cats  ?>
+  </div>
+  <?php
   }
 
 function tree() {
@@ -173,6 +161,8 @@ function get_unity_members($id){
     ?>
 
     <script>
+
+      //minus font size
       document.getElementById("hierarchyfont-").addEventListener("click", function(){
         var el = document.getElementById('main-hierarchy')
         var style = window.getComputedStyle(el, null).getPropertyValue('font-size')
@@ -180,7 +170,7 @@ function get_unity_members($id){
         document.getElementById("main-hierarchy").style.fontSize = fontSize+'px'
       });
 
-
+      //plus font size
       document.getElementById("hierarchyfont+").addEventListener("click", function(){
         var el = document.getElementById('main-hierarchy')
         var style = window.getComputedStyle(el, null).getPropertyValue('font-size')
@@ -188,10 +178,23 @@ function get_unity_members($id){
         document.getElementById("main-hierarchy").style.fontSize = fontSize+'px'
       });
 
+      //return to default font size
       document.getElementById("hierarchyfont").addEventListener("click", function(){
-
-        document.getElementById("main-hierarchy").style.fontSize = '12px'
+      document.getElementById("main-hierarchy").style.fontSize = '12px'
       });
+
+      //fit screen
+      var hierarchyEl = document.getElementById("main-hierarchy");
+      var hierarchyWidth = window.getComputedStyle(hierarchyEl, null).getPropertyValue('width')
+      // console.log(hierarchyWidth);
+      let child = document.getElementById("main-hierarchy").firstElementChild
+      // console.log(child);
+      let childWidth = window.getComputedStyle(child, null).getPropertyValue('width')
+
+      let percent = (parseFloat(hierarchyWidth) / parseFloat(childWidth))
+      console.log(hierarchyWidth,childWidth, percent);
+      // child.style.width = hierarchyWidth+'px'
+      // child.style.transform = "scale("+percent+")";
 
   </script>
 
