@@ -53,7 +53,8 @@ function subtree($children_ids, $parrent_id, $taxName) {
         echo '<ul>';
             foreach($children_ids as $term_child_id) {
                 $term_child = get_term_by('id', $term_child_id, $taxName);
-                if ( $term_child->parent == $parrent_id) {
+                $bossUnity =  get_term_meta( $term_child_id, 'boss_unity', true );
+                if ( $term_child->parent == $parrent_id && $bossUnity != 'true') {
                     echo '<li><span class="tf-nc">' . $term_child->name . '</span>';
                     $term_children = get_term_children($term_child_id, $taxName);
                     subtree($term_children, $term_child_id, $taxName);
@@ -77,35 +78,88 @@ function subtreeFull($children_ids, $parrent_id, $taxName) {
         echo '<ul>';
             foreach($children_ids as $term_child_id) {
                 $term_child = get_term_by('id', $term_child_id, $taxName);
-                if ( $term_child->parent == $parrent_id) {
-                    echo '<li><span class="tf-nc">' . $term_child->name . get_boss_of_unity($term_child->term_id) .' </span>';
+                $bossUnity =  get_term_meta( $term_child_id, 'boss_unity', true );
+                if ( $term_child->parent == $parrent_id && $bossUnity != 'true') {
+                    echo '<li><span class="tf-nc">' . $term_child->name . get_boss_of_unity($term_child->term_id) .
+                    get_unique_position_of_unity($term_child->term_id).
+                    '
+                    </span>';
                     $term_children = get_term_children($term_child_id, $taxName);
                     //get_unity_members($term_child->term_id);
                     subtreeFull($term_children, $term_child_id, $taxName);
-
                     echo '</li>';
                 }
             }
         echo '</ul>';
+    }else{
+      get_all_positions_of_a_position_tax($parrent_id);
     }
+}
+
+function get_all_positions_of_a_position_tax($id){
+  $args = array(
+    'post_type' => 'positions',
+    'post_status' => array('publish'),
+    'posts_per_page' => -1,
+    'tax_query' => array(
+      'relation' => 'AND',
+        array(
+          'taxonomy' => 'position_tax',
+          'field' => 'term_id',
+          'terms' => $id,
+          'include_children' => false,
+          'operator' => 'IN'
+        )
+    )
+  );
+
+
+  $the_query = new WP_Query( $args );
+  if( $the_query->found_posts > 1 ){
+    ?><ul><?php
+    if ( $the_query->have_posts() ) :
+    while ( $the_query->have_posts() ) : $the_query->the_post();
+      ?>
+      <li> <span class="tf-nc"><?php echo get_the_title() ?></span> </li>
+      <?php
+    endwhile;
+    endif;
+    wp_reset_postdata();
+    ?></ul><?php
+  }
 }
 
 function get_boss_of_unity($id){
 
+  $childs = get_terms(
+    array(
+    'taxonomy' => 'position_tax',
+    'hide_empty' => false,
+    'parent' => $id,
+    'meta_query' => array(
+       array(
+          'key'       => 'boss_unity',
+          'value'     => 'true',
+          'compare'   => '='
+       )
+    )
+    )
+  );
+  // return null;
   $args = array(
     'post_type' => 'positions',
     'post_status' => array('publish'),
     'posts_per_page' => 1,
     'tax_query' => array(
-  'relation' => 'AND',
-  array(
-    'taxonomy' => 'position_tax',
-    'field' => 'term_id',
-    'terms' => $id,
-    'include_children' => false,
-    'operator' => 'IN'
-  )
-)
+      'relation' => 'AND',
+        array(
+          'taxonomy' => 'position_tax',
+          'field' => 'term_id',
+          'terms' => $childs[0]->term_id,
+          'include_children' => false,
+          'operator' => 'IN'
+        )
+    )
   );
 
   $var = '';
@@ -117,6 +171,39 @@ function get_boss_of_unity($id){
   endif;
   wp_reset_postdata();
   return $var;
+}
+
+function get_unique_position_of_unity($id){
+
+  $args = array(
+    'post_type' => 'positions',
+    'post_status' => array('publish'),
+    'posts_per_page' => -1,
+    'tax_query' => array(
+      'relation' => 'AND',
+        array(
+          'taxonomy' => 'position_tax',
+          'field' => 'term_id',
+          'terms' => $id,
+          'include_children' => false,
+          'operator' => 'IN'
+        )
+    )
+  );
+
+  $var = '';
+  $the_query = new WP_Query( $args );
+  if( $the_query->found_posts <= 1 ){
+    if ( $the_query->have_posts() ) :
+    while ( $the_query->have_posts() ) : $the_query->the_post();
+      $var = ' / '.get_the_title();
+    endwhile;
+    endif;
+    wp_reset_postdata();
+  }
+
+  return $var;
+
 }
 
 function get_unity_members($id){
@@ -192,7 +279,7 @@ function get_unity_members($id){
       let childWidth = window.getComputedStyle(child, null).getPropertyValue('width')
 
       let percent = (parseFloat(hierarchyWidth) / parseFloat(childWidth))
-      console.log(hierarchyWidth,childWidth, percent);
+      // console.log(hierarchyWidth,childWidth, percent);
       // child.style.width = hierarchyWidth+'px'
       // child.style.transform = "scale("+percent+")";
 
@@ -200,4 +287,7 @@ function get_unity_members($id){
 
     <?php
   }
+
+
+
  ?>
