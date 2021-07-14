@@ -37,14 +37,14 @@ function cc85_search_box_function(){
   while ( $the_query->have_posts() ) : $the_query->the_post();
     $id = get_the_ID();
     $position = get_the_terms($id, 'position_tax');
-    $position_typr = get_the_terms($id, 'position_type_tax');
+    // $position_typr = get_the_terms($id, 'position_type_tax');
     array_push($positions,
       array(
         'name' => get_the_title(),
         'ext' => get_post_meta($id,'ext',true),
         'email' => get_post_meta($id,'email', true),
         'position' => $position[0]->name,
-        'position_type' => $position_typr[0]->name
+        // 'position_type' => $position_typr[0]->name
 
       )
   );
@@ -97,7 +97,7 @@ function cc85_search_box_function(){
         let p = document.createElement("p")
         p.innerHTML = `<div class="cc85-position-card">
           <p><i class="fa fa-address-book"></i> ${contact.name}</p>
-          <p> ${contact.position_type} / ${contact.position}</p>
+          <p> ${contact.position}</p>
           <p><i class="fa fa-phone-square"></i> ${contact.ext}</p>
           <p><i class="fa fa-envelope"></i> ${contact.email}</p>
         </div>`;

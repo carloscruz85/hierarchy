@@ -14,7 +14,7 @@ function add_positions_post_type() {
     'has_archive'        => true,
     'hierarchical'       => true,
     'menu_position'      => null,
-    'supports'           => array( 'title', 'editor', 'hierarchical','page-attributes'),
+    'supports'           => array( 'title'),
     'menu_icon'          => 'dashicons-networking',
 
   );
@@ -40,17 +40,17 @@ function create_position_tax() {
     )
   );
 
-  register_taxonomy(
-    'position_type_tax',
-    array('positions'),
-    array(
-      'show_in_nav_menus' => true,
-      'label' => __( 'Position Type' ),
-      // 'rewrite' => array('slug'=>'discover'),
-      'hierarchical' => true,
-      'show_admin_column' =>true
-    )
-  );
+  // register_taxonomy(
+  //   'position_type_tax',
+  //   array('positions'),
+  //   array(
+  //     'show_in_nav_menus' => true,
+  //     'label' => __( 'Position Type' ),
+  //     // 'rewrite' => array('slug'=>'discover'),
+  //     'hierarchical' => true,
+  //     'show_admin_column' =>true
+  //   )
+  // );
 }
 
 function metabox_to_test_reg() {
@@ -126,5 +126,63 @@ function twp_save_meta_box( $post_id ) {
 
 }
 add_action( 'save_post', 'twp_save_meta_box' );
+
+
+//adding custom field in taxonomy
+
+// A callback function to add a custom field to our "presenters" taxonomy
+function position_tax_taxonomy_custom_fields($tag) {
+    // x($tag);
+   // Check for existing taxonomy meta for the term you're editing
+    $t_id = $tag->term_id; // Get the ID of the term you're editing
+    $term_meta = get_option( "taxonomy_term_$t_id" ); // Do the check
+
+    // x($term_meta);
+    // $term_meta = array(
+    //   'main' => 'true'
+    // );
+    // update_option( "taxonomy_term_$t_id", $term_meta );
+?>
+
+<tr class="form-field">
+    <th scope="row" valign="top">
+        <label for="main"><?php _e('Main Unity'); ?></label>
+    </th>
+    <td>
+        <input type="checkbox" name="term_meta[main]" id="term_meta[main]" value="true" <?php if( $term_meta['main'] == 'true' ) echo 'checked' ?>>
+        <br />
+        <span class="description"><?php _e('It\'s a main unity?'); ?></span>
+    </td>
+</tr>
+
+<?php
+}
+
+// A callback function to save our extra taxonomy field(s)
+function save_position_tax_custom_fields( $term_id ) {
+    $t_id = $term_id;
+    if ( isset( $_POST['term_meta'] ) ) {
+        $term_meta = get_option( "taxonomy_term_$t_id" );
+        $cat_keys = array_keys( $_POST['term_meta'] );
+            foreach ( $cat_keys as $key ){
+            if ( isset( $_POST['term_meta'][$key] ) ){
+                $term_meta[$key] = $_POST['term_meta'][$key];
+            }
+        }
+        //save the option array
+        update_option( "taxonomy_term_$t_id", $term_meta );
+    }else{
+      $term_meta = array(
+        'main' => 'false'
+      );
+      update_option( "taxonomy_term_$t_id", $term_meta );
+    }
+}
+
+// Add the fields to the "presenters" taxonomy, using our callback function
+add_action( 'position_tax_edit_form_fields', 'position_tax_taxonomy_custom_fields', 10, 2 );
+
+// Save the changes made on the "presenters" taxonomy, using our callback function
+add_action( 'edited_position_tax', 'save_position_tax_custom_fields', 10, 2 );
 
 ?>
