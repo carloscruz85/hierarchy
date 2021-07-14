@@ -130,59 +130,57 @@ add_action( 'save_post', 'twp_save_meta_box' );
 
 //adding custom field in taxonomy
 
-// A callback function to add a custom field to our "presenters" taxonomy
-function position_tax_taxonomy_custom_fields($tag) {
-    // x($tag);
-   // Check for existing taxonomy meta for the term you're editing
-    $t_id = $tag->term_id; // Get the ID of the term you're editing
-    $term_meta = get_option( "taxonomy_term_$t_id" ); // Do the check
 
-    // x($term_meta);
-    // $term_meta = array(
-    //   'main' => 'true'
-    // );
-    // update_option( "taxonomy_term_$t_id", $term_meta );
+add_action( 'position_tax_add_form_fields', 'position_tax_add_term_fields' );
+
+function position_tax_add_term_fields( $taxonomy ) {
+  ?>
+  <tr class="form-field">
+      <th scope="row" valign="top">
+          <label for="main"><?php _e('Main Unity'); ?></label>
+      </th>
+      <td>
+          <input type="checkbox" name="misha-text" id="misha-text" value="true">
+          <br />
+          <span class="description"><?php _e('It\'s a main unity?'); ?></span>
+      </td>
+  </tr>
+  <?php
+
+}
+
+
+add_action( 'position_tax_edit_form_fields', 'misha_edit_term_fields', 10, 2 );
+
+function misha_edit_term_fields( $term, $taxonomy ) {
+
+	$value = get_term_meta( $term->term_id, 'misha-text', true );
+
 ?>
-
 <tr class="form-field">
     <th scope="row" valign="top">
         <label for="main"><?php _e('Main Unity'); ?></label>
     </th>
     <td>
-        <input type="checkbox" name="term_meta[main]" id="term_meta[main]" value="true" <?php if( $term_meta['main'] == 'true' ) echo 'checked' ?>>
+        <input type="checkbox" name="misha-text" id="misha-text" value="true" <?php if($value == 'true') echo "checked"; ?>>
         <br />
         <span class="description"><?php _e('It\'s a main unity?'); ?></span>
     </td>
 </tr>
-
 <?php
+
 }
 
-// A callback function to save our extra taxonomy field(s)
-function save_position_tax_custom_fields( $term_id ) {
-    $t_id = $term_id;
-    if ( isset( $_POST['term_meta'] ) ) {
-        $term_meta = get_option( "taxonomy_term_$t_id" );
-        $cat_keys = array_keys( $_POST['term_meta'] );
-            foreach ( $cat_keys as $key ){
-            if ( isset( $_POST['term_meta'][$key] ) ){
-                $term_meta[$key] = $_POST['term_meta'][$key];
-            }
-        }
-        //save the option array
-        update_option( "taxonomy_term_$t_id", $term_meta );
-    }else{
-      $term_meta = array(
-        'main' => 'false'
-      );
-      update_option( "taxonomy_term_$t_id", $term_meta );
-    }
+add_action( 'created_position_tax', 'misha_save_term_fields' );
+add_action( 'edited_position_tax', 'misha_save_term_fields' );
+
+function misha_save_term_fields( $term_id ) {
+
+	update_term_meta(
+		$term_id,
+		'misha-text',
+		sanitize_text_field( $_POST[ 'misha-text' ] )
+	);
+
 }
-
-// Add the fields to the "presenters" taxonomy, using our callback function
-add_action( 'position_tax_edit_form_fields', 'position_tax_taxonomy_custom_fields', 10, 2 );
-
-// Save the changes made on the "presenters" taxonomy, using our callback function
-add_action( 'edited_position_tax', 'save_position_tax_custom_fields', 10, 2 );
-
 ?>
