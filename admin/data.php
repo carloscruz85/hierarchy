@@ -137,12 +137,23 @@ function position_tax_add_term_fields( $taxonomy ) {
   ?>
   <tr class="form-field">
       <th scope="row" valign="top">
-          <label for="main"><?php _e('Main Unity'); ?></label>
+          <label for="main_unity_check"><?php _e('Main Unity'); ?></label>
       </th>
       <td>
           <input type="checkbox" name="main_unity_check" id="main_unity_check" value="true">
           <br />
           <span class="description"><?php _e('It\'s a main unity?'); ?></span>
+      </td>
+  </tr>
+
+  <tr class="form-field">
+      <th scope="row" valign="top">
+          <label for="boss_unity"><?php _e('Boss Unity'); ?></label>
+      </th>
+      <td>
+          <input type="checkbox" name="boss_unity" id="boss_unity" value="true">
+          <br />
+          <span class="description"><?php _e('It\'s a boss unity?'); ?></span>
       </td>
   </tr>
   <?php
@@ -167,6 +178,19 @@ function misha_edit_term_fields( $term, $taxonomy ) {
         <span class="description"><?php _e('It\'s a main unity?'); ?></span>
     </td>
 </tr>
+
+<?php 	$bossUnity = get_term_meta( $term->term_id, 'boss_unity', true ); ?>
+
+<tr class="form-field">
+    <th scope="row" valign="top">
+        <label for="boss_unity"><?php _e('Boss Unity'); ?></label>
+    </th>
+    <td>
+        <input type="checkbox" name="boss_unity" id="boss_unity" value="true" <?php if($bossUnity == 'true') echo "checked"; ?>>
+        <br />
+        <span class="description"><?php _e('It\'s a boss unity?'); ?></span>
+    </td>
+</tr>
 <?php
 
 }
@@ -181,6 +205,12 @@ function misha_save_term_fields( $term_id ) {
 		'main_unity_check',
 		sanitize_text_field( $_POST[ 'main_unity_check' ] )
 	);
+
+  update_term_meta(
+    $term_id,
+    'boss_unity',
+    sanitize_text_field( $_POST[ 'boss_unity' ] )
+  );
 
 }
 
@@ -214,7 +244,7 @@ function custom_column_content( $value, $column_name, $tax_id ){
                // your code here
                $value = '';
                if(get_term_meta( $tax_id, 'main_unity_check', true )) $value = 'Is Main';
-               
+
           break;
 
           case 'header_name2':

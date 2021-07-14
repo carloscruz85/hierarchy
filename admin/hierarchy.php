@@ -97,15 +97,15 @@ function get_boss_of_unity($id){
     'post_status' => array('publish'),
     'posts_per_page' => 1,
     'tax_query' => array(
-  'relation' => 'AND',
-  array(
-    'taxonomy' => 'position_tax',
-    'field' => 'term_id',
-    'terms' => $id,
-    'include_children' => false,
-    'operator' => 'IN'
-  )
-)
+      'relation' => 'AND',
+        array(
+          'taxonomy' => 'position_tax',
+          'field' => 'term_id',
+          'terms' => $id,
+          'include_children' => false,
+          'operator' => 'IN'
+        )
+    )
   );
 
   $var = '';
