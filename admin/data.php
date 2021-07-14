@@ -140,7 +140,7 @@ function position_tax_add_term_fields( $taxonomy ) {
           <label for="main"><?php _e('Main Unity'); ?></label>
       </th>
       <td>
-          <input type="checkbox" name="misha-text" id="misha-text" value="true">
+          <input type="checkbox" name="main_unity_check" id="main_unity_check" value="true">
           <br />
           <span class="description"><?php _e('It\'s a main unity?'); ?></span>
       </td>
@@ -154,7 +154,7 @@ add_action( 'position_tax_edit_form_fields', 'misha_edit_term_fields', 10, 2 );
 
 function misha_edit_term_fields( $term, $taxonomy ) {
 
-	$value = get_term_meta( $term->term_id, 'misha-text', true );
+	$value = get_term_meta( $term->term_id, 'main_unity_check', true );
 
 ?>
 <tr class="form-field">
@@ -162,7 +162,7 @@ function misha_edit_term_fields( $term, $taxonomy ) {
         <label for="main"><?php _e('Main Unity'); ?></label>
     </th>
     <td>
-        <input type="checkbox" name="misha-text" id="misha-text" value="true" <?php if($value == 'true') echo "checked"; ?>>
+        <input type="checkbox" name="main_unity_check" id="main_unity_check" value="true" <?php if($value == 'true') echo "checked"; ?>>
         <br />
         <span class="description"><?php _e('It\'s a main unity?'); ?></span>
     </td>
@@ -178,9 +178,56 @@ function misha_save_term_fields( $term_id ) {
 
 	update_term_meta(
 		$term_id,
-		'misha-text',
-		sanitize_text_field( $_POST[ 'misha-text' ] )
+		'main_unity_check',
+		sanitize_text_field( $_POST[ 'main_unity_check' ] )
 	);
 
 }
+
+//add column to tax_position list
+
+// these filters will only affect custom column, the default column will not be affected
+// filter: manage_edit-{$taxonomy}_columns
+function custom_column_header( $columns ){
+    $columns['header_name'] = 'is Main unity';
+    return $columns;
+}
+add_filter( "manage_edit-position_tax_columns", 'custom_column_header', 10);
+
+
+
+// parm order: value_to_display, $column_name, $tag->term_id
+// filter: manage_{$taxonomy}_custom_column
+function custom_column_content( $value, $column_name, $tax_id ){
+    // var_dump( $column_name );
+    // var_dump( $value );
+    // var_dump( $tax_id );
+
+    // for multiple custom column, you may consider using the column name to distinguish
+
+    // although If clause is working, Switch is a more generic and well structured approach for multiple columns
+    // if ($column_name === 'header_name') {
+        // echo '1234';
+    // }
+    switch( $column_name ) {
+          case 'header_name':
+               // your code here
+               $value = '';
+               if(get_term_meta( $tax_id, 'main_unity_check', true )) $value = 'Is Main';
+               
+          break;
+
+          case 'header_name2':
+               // your code here
+               $value = 'header name 2';
+          break;
+
+          // ... similarly for more columns
+          default:
+          break;
+    }
+
+    return $value; // this is the display value
+}
+add_action( "manage_position_tax_custom_column", 'custom_column_content', 10, 3);
 ?>
