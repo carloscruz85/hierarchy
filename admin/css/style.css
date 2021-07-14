@@ -38,3 +38,18 @@
 .members .member{
   margin: 1rem 0;
 }
+
+.font-size-controls{
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.font-size-controls i{
+  cursor: pointer;
+}
+
+
+#main-hierarchy{
+  font-size: 12px;
+  transition: font-size 0.5s;
+}

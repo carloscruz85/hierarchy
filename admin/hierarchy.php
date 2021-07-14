@@ -21,20 +21,37 @@ function add_tree_flex_to_header() {
     if ( is_admin()){
       return;
     }
+
+    ?>
+    <div class="font-size-controls">
+      <div  id="hierarchyfont-">
+        <i class="fa fa-minus-circle"></i>
+      </div>
+      <div id="hierarchyfont+">
+        <i class="fa fa-plus-circle"></i>
+      </div>
+      <div id="hierarchyfont">
+        <i class="fa fa-crosshairs"></i>
+      </div>
+    </div>
+          <?php
+
     if( $att['full'] == 'true' ){ //full
       ?>
-      <div class="tf-tree tf-gap-lg">
+      <div class="tf-tree tf-gap-lg" id="main-hierarchy">
         <?php treeFull() ?>
       </div>
       <?php
     }
     else{ //just cats
       ?>
-      <div class="tf-tree tf-gap-lg">
+      <div class="tf-tree tf-gap-lg" id="main-hierarchy">
         <?php tree() ?>
       </div>
+
       <?php
     }
+
   }
 
 function tree() {
@@ -75,7 +92,7 @@ function subtreeFull($children_ids, $parrent_id, $taxName) {
                 if ( $term_child->parent == $parrent_id) {
                     echo '<li><span class="tf-nc">' . $term_child->name . get_boss_of_unity($term_child->term_id) .' </span>';
                     $term_children = get_term_children($term_child_id, $taxName);
-                    get_unity_members($term_child->term_id);
+                    //get_unity_members($term_child->term_id);
                     subtreeFull($term_children, $term_child_id, $taxName);
 
                     echo '</li>';
@@ -91,14 +108,14 @@ function get_boss_of_unity($id){
     'post_type' => 'positions',
     'post_status' => array('publish'),
     'posts_per_page' => 1,
-    'tax_query' => array( // (array) - use taxonomy parameters (available with Version 3.1).
-  'relation' => 'AND', // (string) - The logical relationship between each inner taxonomy array when there is more than one. Possible values are 'AND', 'OR'. Do not use with a single inner taxonomy array. Default value is 'AND'.
+    'tax_query' => array(
+  'relation' => 'AND',
   array(
-    'taxonomy' => 'position_tax', // (string) - Taxonomy.
-    'field' => 'term_id', // (string) - Select taxonomy term by Possible values are 'term_id', 'name', 'slug' or 'term_taxonomy_id'. Default value is 'term_id'.
-    'terms' => $id, // (int/string/array) - Taxonomy term(s).
-    'include_children' => false, // (bool) - Whether or not to include children for hierarchical taxonomies. Defaults to true.
-    'operator' => 'IN' // (string) - Operator to test. Possible values are 'IN', 'NOT IN', 'AND', 'EXISTS' and 'NOT EXISTS'. Default value is 'IN'.
+    'taxonomy' => 'position_tax',
+    'field' => 'term_id',
+    'terms' => $id,
+    'include_children' => false,
+    'operator' => 'IN'
   )
 )
   );
@@ -119,22 +136,14 @@ function get_unity_members($id){
     'post_type' => 'positions',
     'post_status' => array('publish'),
     'posts_per_page' => -1,
-    'tax_query' => array( // (array) - use taxonomy parameters (available with Version 3.1).
-  'relation' => 'AND', // (string) - The logical relationship between each inner taxonomy array when there is more than one. Possible values are 'AND', 'OR'. Do not use with a single inner taxonomy array. Default value is 'AND'.
+    'tax_query' => array(
+  'relation' => 'AND',
   array(
-    'taxonomy' => 'position_tax', // (string) - Taxonomy.
-    'field' => 'term_id', // (string) - Select taxonomy term by Possible values are 'term_id', 'name', 'slug' or 'term_taxonomy_id'. Default value is 'term_id'.
-    'terms' => $id, // (int/string/array) - Taxonomy term(s).
-    'include_children' => false, // (bool) - Whether or not to include children for hierarchical taxonomies. Defaults to true.
-    'operator' => 'IN' // (string) - Operator to test. Possible values are 'IN', 'NOT IN', 'AND', 'EXISTS' and 'NOT EXISTS'. Default value is 'IN'.
-  ),
-
-  array(
-    'taxonomy' => 'position_type_tax', // (string) - Taxonomy.
-    'field' => 'term_id', // (string) - Select taxonomy term by Possible values are 'term_id', 'name', 'slug' or 'term_taxonomy_id'. Default value is 'term_id'.
-    'terms' => $id, // (int/string/array) - Taxonomy term(s).
-    'include_children' => false, // (bool) - Whether or not to include children for hierarchical taxonomies. Defaults to true.
-    'operator' => 'NOT IN' // (string) - Operator to test. Possible values are 'IN', 'NOT IN', 'AND', 'EXISTS' and 'NOT EXISTS'. Default value is 'IN'.
+    'taxonomy' => 'position_tax',
+    'field' => 'term_id',
+    'terms' => $id,
+    'include_children' => false,
+    'operator' => 'IN'
   )
 )
   );
@@ -156,4 +165,36 @@ function get_unity_members($id){
   <?php
 }
 
+
+
+  //add js in the footer
+  add_action( 'wp_footer', 'cc85_js_code_to_hierarchy' );
+  function cc85_js_code_to_hierarchy(){
+    ?>
+
+    <script>
+      document.getElementById("hierarchyfont-").addEventListener("click", function(){
+        var el = document.getElementById('main-hierarchy')
+        var style = window.getComputedStyle(el, null).getPropertyValue('font-size')
+        var fontSize = parseFloat(style) - 1;
+        document.getElementById("main-hierarchy").style.fontSize = fontSize+'px'
+      });
+
+
+      document.getElementById("hierarchyfont+").addEventListener("click", function(){
+        var el = document.getElementById('main-hierarchy')
+        var style = window.getComputedStyle(el, null).getPropertyValue('font-size')
+        var fontSize = parseFloat(style) + 1;
+        document.getElementById("main-hierarchy").style.fontSize = fontSize+'px'
+      });
+
+      document.getElementById("hierarchyfont").addEventListener("click", function(){
+
+        document.getElementById("main-hierarchy").style.fontSize = '12px'
+      });
+
+  </script>
+
+    <?php
+  }
  ?>
