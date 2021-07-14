@@ -23,5 +23,5 @@ function add_global_style_to_header() {
   }
 
 include('admin/data.php');
-include('admin/frontend.php');
+include('admin/searchbox.php');
 include('admin/hierarchy.php');

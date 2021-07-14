@@ -37,15 +37,13 @@ function cc85_search_box_function(){
   while ( $the_query->have_posts() ) : $the_query->the_post();
     $id = get_the_ID();
     $position = get_the_terms($id, 'position_tax');
-    // $position_typr = get_the_terms($id, 'position_type_tax');
     array_push($positions,
       array(
-        'name' => get_the_title(),
-        'ext' => get_post_meta($id,'ext',true),
-        'email' => get_post_meta($id,'email', true),
-        'position' => $position[0]->name,
-        // 'position_type' => $position_typr[0]->name
-
+        'name'        => get_the_title(),
+        'ext'         => get_post_meta($id,'ext',true),
+        'email'       => get_post_meta($id,'email', true),
+        'position'    => $position[0]->name,
+        'main_unity'  => get_main_unity($position[0])
       )
   );
   endwhile;
@@ -83,7 +81,20 @@ function cc85_search_box_function(){
     const input = document.querySelector('input.cc85searchinput');
     const log = document.getElementById('resultados');
 
+    //trigger
 
+    data.map( (contact, i) => {
+      let p = document.createElement("p")
+      p.innerHTML = `<div class="cc85-position-card">
+        <p><i class="fa fa-address-book"></i> ${contact.name}</p>
+        <p>${contact.main_unity} / ${contact.position}</p>
+        <p><i class="fa fa-phone-square"></i> ${contact.ext}</p>
+        <p><i class="fa fa-envelope"></i> ${contact.email}</p>
+      </div>`;
+      log.append(p)
+    })
+
+    //add listener
 
     input.addEventListener('input', updateValue);
 
@@ -97,7 +108,7 @@ function cc85_search_box_function(){
         let p = document.createElement("p")
         p.innerHTML = `<div class="cc85-position-card">
           <p><i class="fa fa-address-book"></i> ${contact.name}</p>
-          <p> ${contact.position}</p>
+          <p>${contact.main_unity} / ${contact.position}</p>
           <p><i class="fa fa-phone-square"></i> ${contact.ext}</p>
           <p><i class="fa fa-envelope"></i> ${contact.email}</p>
         </div>`;
@@ -109,5 +120,12 @@ function cc85_search_box_function(){
 
     <?php
   }
+}
+
+function get_main_unity($term){
+  $value = get_term_meta( $term->term_id, 'main_unity_check', true );
+  if( $term->parent == 0 ) return $term->name;
+  if( $value == 'true' ) return $term->name;
+  return get_main_unity(get_term($term->parent, 'position_tax'));
 }
  ?>
