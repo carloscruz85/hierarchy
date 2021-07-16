@@ -81,16 +81,40 @@ function cc85_search_box_function(){
     const input = document.querySelector('input.cc85searchinput');
     const log = document.getElementById('resultados');
 
+    //custom format
+    const format_data_contact = (contact) => {
+      return `<div class="cc85-position-card">
+        <p><i class="fa fa-address-book"></i> ${contact.name}</p>
+        <p>${contact.position} / ${contact.main_unity}</p>
+        <p><i class="fa fa-phone-square"></i> ${contact.ext}</p>
+        <p><i class="fa fa-envelope"></i> ${contact.email}</p>
+      </div>`;
+    }
+
+    //slugify
+    const string_to_slug = (str) => {
+    str = str.replace(/^\s+|\s+$/g, ''); // trim
+    str = str.toLowerCase();
+
+    // remove accents, swap ñ for n, etc
+    var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
+    var to   = "aaaaeeeeiiiioooouuuunc------";
+    for (var i=0, l=from.length ; i<l ; i++) {
+        str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+    }
+
+    str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+        .replace(/\s+/g, '-') // collapse whitespace and replace by -
+        .replace(/-+/g, '-'); // collapse dashes
+
+    return str;
+  }
+
     //trigger
 
     data.map( (contact, i) => {
       let p = document.createElement("p")
-      p.innerHTML = `<div class="cc85-position-card">
-        <p><i class="fa fa-address-book"></i> ${contact.name}</p>
-        <p>${contact.main_unity} / ${contact.position}</p>
-        <p><i class="fa fa-phone-square"></i> ${contact.ext}</p>
-        <p><i class="fa fa-envelope"></i> ${contact.email}</p>
-      </div>`;
+      p.innerHTML = format_data_contact(contact);
       log.append(p)
     })
 
@@ -101,20 +125,18 @@ function cc85_search_box_function(){
     function updateValue(e) {
       log.innerHTML = '';
       data.filter( contact => {
-        if( contact.name.toLowerCase().search(input.value.toLowerCase()) !== -1 ){
+        if(
+          string_to_slug(contact.name).search(string_to_slug(input.value)) !== -1 ){
           return contact
         }
       } ).map( (contact, i) => {
         let p = document.createElement("p")
-        p.innerHTML = `<div class="cc85-position-card">
-          <p><i class="fa fa-address-book"></i> ${contact.name}</p>
-          <p>${contact.main_unity} / ${contact.position}</p>
-          <p><i class="fa fa-phone-square"></i> ${contact.ext}</p>
-          <p><i class="fa fa-envelope"></i> ${contact.email}</p>
-        </div>`;
+        p.innerHTML = format_data_contact(contact);
         log.append(p)
       })
     }
+
+
 
     </script>
 
@@ -128,4 +150,6 @@ function get_main_unity($term){
   if( $value == 'true' ) return $term->name;
   return get_main_unity(get_term($term->parent, 'position_tax'));
 }
+
+
  ?>
