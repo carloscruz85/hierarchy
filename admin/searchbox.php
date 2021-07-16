@@ -83,12 +83,21 @@ function cc85_search_box_function(){
 
     //custom format
     const format_data_contact = (contact) => {
-      return `<div class="cc85-position-card">
-        <p><i class="fa fa-address-book"></i> ${contact.name}</p>
-        <p>${contact.position} / ${contact.main_unity}</p>
-        <p><i class="fa fa-phone-square"></i> ${contact.ext}</p>
-        <p><i class="fa fa-envelope"></i> ${contact.email}</p>
-      </div>`;
+
+      let code = `<p><i class="fa fa-user"></i> ${contact.name}</p>`;
+
+      let ext = ''
+      if( contact.ext.length != 0) ext = `<p><i class="fa fa-phone-square"></i> ${contact.ext}</p>`
+
+      let position = ''
+      if( contact.position != null || contact.main_unity != null  ) position = `<p><i class="fa fa-vcard"></i> ${contact.position} / ${contact.main_unity}</p>`
+
+      let mail = ``
+      if( contact.email.length != 0) mail = `<p><i class="fa fa-envelope"></i> ${contact.email}</p>`
+
+
+
+      return `<div class="cc85-position-card">${code} ${position} ${ext}  ${mail}</div>`;
     }
 
     //slugify
