@@ -14,7 +14,25 @@
   /* border: 1px solid blue; */
   padding: 0.5rem;
   box-shadow: 10px 10px 20px black;
+  animation: example 0.5s linear;
+  position: relative;
+  top: 0px;
+  opacity: 1;
+  border-radius: 5px;
 }
+
+@keyframes example {
+  from {
+    top: 20px;
+    opacity: 0;
+  }
+  to {
+    top: 0px;
+    opacity: 1;
+  }
+}
+
+
 
 /*Hierarchy*/
 
