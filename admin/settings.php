@@ -16,6 +16,8 @@ function add_positions_post_type() {
     'menu_position'      => null,
     'supports'           => array( 'title'),
     'menu_icon'          => 'dashicons-networking',
+    'capability_type'     => array('cc85_hierarchy_manager','cc85_hierarchy_managers'),
+    'map_meta_cap'        => true,
 
   );
   register_post_type( 'positions', $args );
@@ -36,7 +38,13 @@ function create_position_tax() {
       'label' => __( 'Position Category' ),
       // 'rewrite' => array('slug'=>'discover'),
       'hierarchical' => true,
-      'show_admin_column' =>true
+      'show_admin_column' =>true,
+      'capabilities' => array(
+        'manage_terms' => 'edit_cc85_hierarchy_managers',
+        'edit_terms'    => 'edit_cc85_hierarchy_managers',
+        'delete_terms'  => 'edit_cc85_hierarchy_managers',
+        'assign_terms'  => 'edit_cc85_hierarchy_managers'
+      )
     )
   );
 
@@ -262,4 +270,47 @@ function custom_column_content( $value, $column_name, $tax_id ){
     return $value; // this is the display value
 }
 add_action( "manage_position_tax_custom_column", 'custom_column_content', 10, 3);
+
+// adding custom role to manage positions
+
+function cc85_hierarchy_add_position_management_role() {
+ add_role('cc85_hierarchy_manager',
+            'Hierarchy Manager',
+            array(
+                'read' => true,
+                'edit_posts' => false,
+                'delete_posts' => false,
+                'publish_posts' => false,
+                'upload_files' => false,
+            )
+        );
+   }
+   add_action( 'init', 'cc85_hierarchy_add_position_management_role' );
+   // remove_role('cc85_hierarchy_manager');
+   //adding capabilites to hierarchy managers
+   add_action('admin_init','cc85_hierarchy_add_role_caps',999);
+function cc85_hierarchy_add_role_caps() {
+
+  // Add the roles you'd like to administer the custom post types
+  $roles = array('cc85_hierarchy_manager','editor','administrator');
+
+  // Loop through each role and assign capabilities
+  foreach($roles as $the_role) {
+
+       $role = get_role($the_role);
+
+       $role->add_cap( 'read' );
+              $role->add_cap( 'read_cc85_hierarchy_manager');
+              $role->add_cap( 'read_private_cc85_hierarchy_managers' );
+              $role->add_cap( 'edit_cc85_hierarchy_manager' );
+              $role->add_cap( 'edit_cc85_hierarchy_managers' );
+              $role->add_cap( 'edit_others_cc85_hierarchy_managers' );
+              $role->add_cap( 'edit_published_cc85_hierarchy_managers' );
+              $role->add_cap( 'publish_cc85_hierarchy_managers' );
+              $role->add_cap( 'delete_others_cc85_hierarchy_managers' );
+              $role->add_cap( 'delete_private_cc85_hierarchy_managers' );
+              $role->add_cap( 'delete_published_cc85_hierarchy_manager' );
+
+  }
+}
 ?>
