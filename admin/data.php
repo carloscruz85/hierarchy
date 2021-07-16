@@ -81,10 +81,10 @@ wp_nonce_field( 'mi_meta_box_nonce', 'meta_box_nonce' );
         <td> <input type="text" name="<?php echo $value ?>" value="<?php echo get_post_meta($post->ID,$value, true); ?>"></td>
       </tr>
     <?php endforeach; ?>
-    <tr>
+    <!-- <tr>
       <td><b>boss?</b></td>
       <td><input type="checkbox" name="boss" value="true" <?php if(get_post_meta($post->ID,'boss', true) == 'true') echo 'checked' ?>></td>
-    </tr>
+    </tr> -->
   </table>
 
 
@@ -220,6 +220,7 @@ function misha_save_term_fields( $term_id ) {
 // filter: manage_edit-{$taxonomy}_columns
 function custom_column_header( $columns ){
     $columns['header_name'] = 'is Main unity';
+    $columns['boos_column'] = 'is Boss';
     return $columns;
 }
 add_filter( "manage_edit-position_tax_columns", 'custom_column_header', 10);
@@ -247,9 +248,10 @@ function custom_column_content( $value, $column_name, $tax_id ){
 
           break;
 
-          case 'header_name2':
+          case 'boos_column':
                // your code here
-               $value = 'header name 2';
+               $value = '';
+               if(get_term_meta( $tax_id, 'boss_unity', true )) $value = 'Is Boss';
           break;
 
           // ... similarly for more columns
