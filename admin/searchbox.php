@@ -41,6 +41,7 @@ function cc85_search_box_function(){
       array(
         'name'        => get_the_title(),
         'ext'         => get_post_meta($id,'ext',true),
+        'phone'       => get_post_meta($id,'phone',true),
         'email'       => get_post_meta($id,'email', true),
         'position'    => $position[0]->name,
         'main_unity'  => get_main_unity($position[0])
@@ -60,7 +61,7 @@ function cc85_search_box_function(){
   //add input to search
   ?>
   <div class="cc85-positions-container">
-    <input type="text" name="" value="" id="cc85-positions-input" class="cc85searchinput">
+    <input type="text" name="" value="" placeholder="Buscar" id="cc85-positions-input" class="cc85searchinput">
     <div class="" id="resultados">
 
     </div>
@@ -86,6 +87,9 @@ function cc85_search_box_function(){
 
       let code = `<p><i class="fa fa-user"></i> ${contact.name}</p>`;
 
+      let phone = ''
+      if( contact.phone.length != 0 ) phone = `<p><i class="fa fa-phone"></i> ${contact.phone}</p>`
+
       let ext = ''
       if( contact.ext.length != 0) ext = `<p><i class="fa fa-phone-square"></i> ${contact.ext}</p>`
 
@@ -97,7 +101,7 @@ function cc85_search_box_function(){
 
 
 
-      return `<div class="cc85-position-card">${code} ${position} ${ext}  ${mail}</div>`;
+      return `<div class="cc85-position-card">${code} ${position} ${ext} ${phone}  ${mail}</div>`;
     }
 
     //slugify
