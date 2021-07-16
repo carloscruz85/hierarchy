@@ -22,6 +22,6 @@ function add_global_style_to_header() {
     wp_enqueue_style( 'global_style_cc85_hierarchy' );
   }
 
-include('admin/data.php');
+include('admin/settings.php');
 include('admin/searchbox.php');
 include('admin/hierarchy.php');
