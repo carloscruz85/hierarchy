@@ -44,7 +44,8 @@ function cc85_search_box_function(){
         'ext' => get_post_meta($id,'ext',true),
         'email' => get_post_meta($id,'email', true),
         'position' => $position[0]->name,
-        'position_type' => $position_typr[0]->name
+        'position_type' => $position_typr[0]->name,
+        'edit' => get_edit_post_link($id)
 
       )
   );
@@ -53,11 +54,6 @@ function cc85_search_box_function(){
   wp_reset_postdata();
   global $json;
   $json = json_encode($positions);
-
-
-
-
-
 
   //add input to search
   ?>
@@ -69,7 +65,6 @@ function cc85_search_box_function(){
   </div>
   <?php
 
-
   //add js in the footer
   add_action( 'wp_footer', 'cc85_js_code_to_positions' );
   function cc85_js_code_to_positions(){
@@ -80,6 +75,7 @@ function cc85_search_box_function(){
 
 
     const data = <?php echo $json ?>;
+    console.log('data',data);
     const input = document.querySelector('input.cc85searchinput');
     const log = document.getElementById('resultados');
 
@@ -95,11 +91,18 @@ function cc85_search_box_function(){
         }
       } ).map( (contact, i) => {
         let p = document.createElement("p")
+        let edit = '';
+        <?php if(is_user_logged_in()){
+          ?>
+          edit = `<a href="${contact.edit}">Edit</a>`;
+          <?php
+        } ?>
         p.innerHTML = `<div class="cc85-position-card">
           <p><i class="fa fa-address-book"></i> ${contact.name}</p>
           <p> ${contact.position_type} / ${contact.position}</p>
           <p><i class="fa fa-phone-square"></i> ${contact.ext}</p>
           <p><i class="fa fa-envelope"></i> ${contact.email}</p>
+          ${edit}
         </div>`;
         log.append(p)
       })
