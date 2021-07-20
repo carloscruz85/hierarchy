@@ -44,7 +44,8 @@ function cc85_search_box_function(){
         'phone'       => get_post_meta($id,'phone',true),
         'email'       => get_post_meta($id,'email', true),
         'position'    => $position[0]->name,
-        'main_unity'  => get_main_unity($position[0])
+        'main_unity'  => get_main_unity($position[0]),
+        'edit' => get_edit_post_link($id)
       )
   );
   endwhile;
@@ -99,9 +100,15 @@ function cc85_search_box_function(){
       let mail = ``
       if( contact.email.length != 0) mail = `<p><i class="fa fa-envelope"></i> ${contact.email}</p>`
 
+      let edit = '';
+      <?php if(is_user_logged_in()){
+        ?>
+        edit = `<a target="_blank" href="${contact.edit}">Edit</a>`;
+        <?php
+      } ?>
 
 
-      return `<div class="cc85-position-card">${code} ${position} ${ext} ${phone}  ${mail}</div>`;
+      return `<div class="cc85-position-card">${code} ${position} ${ext} ${phone}  ${mail} ${edit}</div>`;
     }
 
     //slugify
